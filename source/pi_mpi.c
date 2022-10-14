@@ -10,7 +10,7 @@ double f(double a) {
 
 int main(int argc, char *argv[]) {
   int  myid, numprocs;
-  long i, n;
+  long unsigned i, n, nLocal;
   double PI25DT = 3.141592653589793238462643;
   double mypi, pi, h, sum, x, eTime, sTime, pTime;
   int source, dest, tag = 100;
@@ -25,10 +25,12 @@ int main(int argc, char *argv[]) {
   if (myid == 0)
     printf("Hay %d procesos en ejecución\n", numprocs);
 
-  n = 9999999999;
+  n = 10000000000;
   h = 1.0 / (double) n;
-  sum = 0.0; // Suma de intervalos 
-  for (i = myid + 1; i <= n; i += numprocs) {
+  sum = 0.0; // Suma de intervalos
+  nLocal = (long unsigned) n / numprocs;
+
+  for (i = myid*nLocal+1; i <= myid*nLocal+nLocal; i++) {
     x = h * ((double)i - 0.5);
     sum += f(x);
   }
